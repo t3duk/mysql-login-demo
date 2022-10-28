@@ -19,9 +19,9 @@ app.use(cookieParser());
 app.set('view engine', 'pug');
 
 var con = mysql2.createConnection({
-    host: "localhost",
-    user: "ted",
-    password: "ted1234",
+    host: "${{secrets.SQL_HOST}}",
+    user: "${{secrets.SQL_USERNAME}}",
+    password: "${{secrets.SQL_PASSWORD}}",
     database: "demodb"
 });
 
