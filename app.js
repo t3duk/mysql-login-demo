@@ -11,7 +11,7 @@ const pug = require('pug');
 const saltRounds = 10;
 const cookieParser = require('cookie-parser');
 const TokenGenerator = require('uuid-token-generator');
-const dotenv = require('dotenv').config;
+require('dotenv').config()
 
 const app = express();
 app.use(express.static("public"));
