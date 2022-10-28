@@ -152,6 +152,6 @@ app.post('/logout', (req, res ) => {
     res.redirect('/login');
 });
 
-app.listen(3000, () => {
+app.listen(80, () => {
     console.log('MySQL Login System Server listening on port 3000!');
 });
