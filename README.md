@@ -13,9 +13,8 @@ Spin your server up and should all work.
 Step by step by step by step by step by step by step by step by step on how to use a local dev server as the database.
 
 1. Open your MySQL console.
-2. 
 
-`
+```
 create database demodb;
 
 use demodb;
@@ -28,6 +27,6 @@ password varchar(255),
 token varchar(255,
 PRIMARY KEY (id)
 );
-`
+```
 
 3. DB is setup.
