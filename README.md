@@ -15,7 +15,7 @@ Step by step by step by step by step by step by step by step by step on how to u
 1. Open your MySQL console.
 2. 
 
-```
+`
 create database demodb;
 
 use demodb;
@@ -28,6 +28,6 @@ password varchar(255),
 token varchar(255,
 PRIMARY KEY (id)
 );
-```
+`
 
 3. DB is setup.
