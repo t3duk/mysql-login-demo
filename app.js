@@ -20,9 +20,9 @@ app.set('view engine', 'pug');
 
 var con = mysql2.createConnection({
     host: "localhost",
-    user: "ted",
-    password: "ted1",
-    database: "mysql_test"
+    user: "root",
+    password: "",
+    database: "demodb"
 });
 
 app.get('/', (req, res) => {
