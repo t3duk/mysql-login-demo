@@ -19,10 +19,10 @@ app.use(cookieParser());
 app.set('view engine', 'pug');
 
 var con = mysql2.createConnection({
-    host: "localhost",
-    user: "ted",
-    password: "ted1234",
-    database: "demodb"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
 });
 
 app.get('/', (req, res) => {
