@@ -20,8 +20,8 @@ app.set('view engine', 'pug');
 
 var con = mysql2.createConnection({
     host: "localhost",
-    user: "root",
-    password: "",
+    user: "ted",
+    password: "ted1234",
     database: "demodb"
 });
 
