@@ -11,6 +11,7 @@ const pug = require('pug');
 const saltRounds = 10;
 const cookieParser = require('cookie-parser');
 const TokenGenerator = require('uuid-token-generator');
+const dotenv = require('dotenv').config;
 
 const app = express();
 app.use(express.static("public"));
@@ -19,10 +20,10 @@ app.use(cookieParser());
 app.set('view engine', 'pug');
 
 var con = mysql2.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
+    host: process.env.DBHOST,
+    user: process.env.DBUSER,
+    password: process.env.DBPASS,
+    database: process.env.DBNAME
 });
 
 app.get('/', (req, res) => {
@@ -152,6 +153,6 @@ app.post('/logout', (req, res ) => {
     res.redirect('/login');
 });
 
-app.listen(80, () => {
+app.listen(process.env.PORT, () => {
     console.log('MySQL Login System Server listening on port 3000!');
 });
