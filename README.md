@@ -12,7 +12,7 @@
 
 *ID must AUTO_INCREMENT and be the PRIMARY KEY.*
 The command used to create the database and table will look a bit like this:
-`create database todrop; use todrop; create table users (id int AUTO_INCREMENT, username varchar(255), email varchar(255), password varchar(255), token varchar(255), PRIMARY KEY (id));`
+`create database mysqlbasiclogindb; use mysqlbasiclogindb; create table users (id int AUTO_INCREMENT, username varchar(255), email varchar(255), password varchar(255), token varchar(255), PRIMARY KEY (id));`
 
 Then, change the database configuration & port in the `.env` file.
 
