@@ -7,4 +7,4 @@ module.exports = {
   plugins: [],
 }
 
-// npx tailwindcss -i ./src/style.css -o ./public/style.css --watch
+// npx tailwindcss -i ./src/style.css -o ./public/style.css --minify
