@@ -18,4 +18,5 @@ jobs:
             cd /web/app
             git pull
             npm i
+            npx tailwindcss -i ./src/style.css -o ./public/style.css --minify
             pm2 restart app.js
