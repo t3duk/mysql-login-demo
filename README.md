@@ -3,6 +3,8 @@
 
 # Install Deps
 `npm install`
+# Compile CSS
+`npx tailwindcss -i ./src/style.css -o ./public/style.css --minify`
 
 Then, change the database configuration & port in the `.env` file.
 
