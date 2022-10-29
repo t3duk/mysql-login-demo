@@ -148,6 +148,76 @@ app.get('/portal', (req, res) => {
     };
 });
 
+app.get('/changepassword', (req, res) => {
+    if (req.cookies['app-token']) {
+        const token = req.cookies['app-token'];
+        con.query("SELECT * FROM users WHERE token = ?", [token], function (err, result, fields) {
+            if (err) throw err;
+            if (result.length > 0) {
+                if (result[0].token === token) {
+                    res.render('changepassword');
+                } else {
+                    res.redirect('/login');
+                }
+            } else {
+                res.redirect('/login');
+            };
+        });
+    } else {
+        res.redirect('/login');
+    };
+});
+
+app.post('/changepassword', (req, res) => {
+    if (req.cookies['app-token']) {
+        const token = req.cookies['app-token'];
+        con.query("SELECT * FROM users WHERE token = ?", [token], function (err, result, fields) {
+            if (err) throw err;
+            if (result.length > 0) {
+                if (result[0].token === token) {
+                    // valid token
+                    const oldpassword = req.body.oldpassword;
+                    const retypepassword = req.body.retypepassword;
+                    const password = req.body.password;
+
+                    if (password === retypepassword) {
+                        bcrypt.compare(oldpassword, result[0].password, function(err, result2) {
+                            if (err) throw err;
+                            if (result2 === true) {
+                                // hash the new password
+                                bcrypt.genSalt(saltRounds, function(err, salt) {
+                                    bcrypt.hash(password, salt, function(err, hash) {
+                                        con.query("UPDATE users SET password = ? WHERE token = ?", [hash, token], function (err, result, fields) {
+                                            if (err) throw err;
+                                            const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
+                                            const token = tokenGen.generate();
+                                            con.query("UPDATE users SET token = ? WHERE password = ?", [token, hash], function (err, result4, fields) {
+                                                if (err) throw err;
+                                                res.cookie('app-token',token);
+                                                res.redirect('/portal');
+                                            });
+                                        });
+                                    });
+                                });
+                            } else {
+                                res.redirect('/changepassword');
+                            }
+                        });
+                    } else {
+                        res.redirect('/changepassword');
+                    };
+                } else {
+                    res.redirect('/login');
+                }
+            } else {
+                res.redirect('/login');
+            };
+        });
+    } else {
+        res.redirect('/login');
+    };
+});
+
 app.post('/logout', (req, res ) => {
     res.clearCookie('app-token');
     res.redirect('/login');

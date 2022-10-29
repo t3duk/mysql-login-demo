@@ -11,9 +11,12 @@
     <div class="flex items-center justify-center h-screen">
         <div class="bg-white rounded-lg shadow-lg p-16">
             <h2 class="text-4xl font-bold text-center p-2">Welcome #{username}</h2>
-            <div class="flex items-center justify-center">
+            <div class="flex items-center justify-center">      
+                <form action="/changepassword" method="GET">
+                    <button class="bg-blue-500 text-white rounded-xl m-1 py-2 px-8 transition-all hover:bg-blue-600" type="submit">Change Password</button>
+                </form>
                 <form action="/logout" method="POST">
-                    <button class="bg-blue-500 text-white rounded-xl py-2 px-8 transition-all hover:bg-blue-600" type="submit">Logout</button>
+                    <button class="bg-blue-500 text-white rounded-xl m-1 py-2 px-8 transition-all hover:bg-blue-600" type="submit">Logout</button>
                 </form>
             </div>
         </div>
