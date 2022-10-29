@@ -218,6 +218,10 @@ app.post('/changepassword', (req, res) => {
     };
 });
 
+app.get('/logout', (req, res) => {
+    redirect('/portal');
+});
+
 app.post('/logout', (req, res ) => {
     res.clearCookie('app-token');
     res.redirect('/login');
