@@ -10,6 +10,7 @@ const html = require('html');
 const pug = require('pug');
 const saltRounds = 10;
 const cookieParser = require('cookie-parser');
+const nodemailer = require('nodemailer');
 const TokenGenerator = require('uuid-token-generator');
 require('dotenv').config()
 
@@ -227,8 +228,92 @@ app.post('/logout', (req, res ) => {
     res.redirect('/login');
 });
 
+app.get('/resetpassword', (req, res ) => {
+    if (req.cookies['app-token']) {
+        const token = req.cookies['app-token'];
+        con.query("SELECT * FROM users WHERE token = ?", [token], function (err, result, fields) {
+            if (err) throw err;
+            if (result.length > 0) {
+                if (result[0].token === token) {
+                    res.render('portal', { username: result[0].username});
+                } else {
+                    res.render('resetpassword');
+                }
+            } else {
+                res.render('resetpassword');
+            };
+        });
+    } else {
+        res.render('resetpassword');
+    };
+});
+
+app.post('/resetpassword', (req, res ) => {
+    const email = req.body.email;
+    con.query("SELECT * FROM users WHERE email = ?", [email], function (err, result, fields) {
+        if (err) throw err;
+        if (result.length > 0) {
+            const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
+            const token = tokenGen.generate();
+            con.query("UPDATE users SET resettoken = ? WHERE email = ?", [token, email], function (err, result, fields) {
+                if (err) throw err;
+                const code = Math.floor(100000 + Math.random() * 999999);
+                con.query("UPDATE users SET resetcode = ? WHERE resettoken = ?", [code, token], function (err, result, fields) {
+                    if (err) throw err;
+                    console.log(code);
+                    res.cookie('email-token',token);
+                    res.render('entercode', { code: code });
+                });
+            });
+        } else {
+            res.redirect('/resetpassword');
+        };
+    });
+});
+
+app.get('/entercode', (req, res ) => {
+    res.redirect('/resetpassword');
+});
+
+app.post('/entercode', (req, res ) => {
+    const code = req.body.code;
+    const emailtoken = req.cookies['email-token'];
+    const newpass = req.body.newpassword;
+    const retypepass = req.body.retypepassword;
+    con.query("SELECT * FROM users WHERE resettoken = ? AND resetcode = ?", [emailtoken, code], function (err, resultcc, fields) {
+        if (err) throw err;
+        if (resultcc.length > 0) {
+            if (newpass === retypepass) {
+                con.query("UPDATE users SET resettoken = ? WHERE id = ?", [null, resultcc[0].id], function (err, resultz, fields) {
+                    if (err) throw err;
+                    con.query("UPDATE users SET resetcode = ? WHERE id = ?", [null, resultcc[0].id], function (err, result, fields) {
+                        if (err) throw err;
+                        bcrypt.genSalt(saltRounds, function(err, salt) {
+                            bcrypt.hash(retypepass, salt, function(err, hash) {
+                                con.query("UPDATE users SET password = ? WHERE id = ?", [hash, resultcc[0].id], function (err, result, fields) {
+                                    if (err) throw err;
+                                    res.clearCookie('email-token');
+                                    const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
+                                    const ntoken = tokenGen.generate();
+                                    con.query("UPDATE users SET token = ? WHERE password = ?", [ntoken, hash], function (err, result4, fields) {
+                                        if (err) throw err;
+                                        res.redirect('/login');
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            } else {
+                res.render('entercode');
+            }
+        } else {
+            res.clearCookie('email-token');
+            res.redirect('/resetpassword');
+        };
+    });
+});
+
 app.listen(process.env.PORT, () => {
     console.log('MySQL Login System Server listening on port 3000!');
 });
-
-// hehe
