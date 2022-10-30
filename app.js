@@ -12,7 +12,17 @@ const saltRounds = 10;
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const TokenGenerator = require('uuid-token-generator');
+const http = require('http');
 require('dotenv').config()
+
+var key = fs.readFileSync(__dirname + '/../certs/selfsigned.key');
+var cert = fs.readFileSync(__dirname + '/../certs/selfsigned.crt');
+var options = {
+  key: key,
+  cert: cert
+};
+
+var server = https.createServer(options, app);
 
 const app = express();
 app.use(express.static("public"));
@@ -314,6 +324,6 @@ app.post('/entercode', (req, res ) => {
     });
 });
 
-app.listen(process.env.PORT, () => {
-    console.log('MySQL Login System Server listening on port 3000!');
+server.listen(process.env.PORT, () => {
+    console.log("server starting on port : " + port)
 });
